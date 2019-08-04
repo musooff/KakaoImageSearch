@@ -1,5 +1,6 @@
 package com.ballboycorp.anappaday.kakaoimagesearch.main.search
 
+import android.os.Handler
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,10 +23,13 @@ class SearchViewModel : BaseObservableViewModel() {
     val pagedList: LiveData<PagedList<Image>> = Transformations.switchMap(result) { it.data }
     val searchState: LiveData<SearchState> = Transformations.switchMap(result) { it.state }
 
-    var query: String? = "obama"
+    private val mHandler = Handler()
+
+    var query: String? = ""
         @Bindable get() = field
         set(value) {
             field = value
+            searchDelayed()
             notifyPropertyChanged(BR.query)
         }
 
@@ -48,14 +52,20 @@ class SearchViewModel : BaseObservableViewModel() {
     }
 
     fun search() {
+        if (query.isNullOrBlank()) return
         updateFound(false)
-        isSearching = true
         query
             ?.takeIf { it.isNotEmpty() }
             ?.let { result.postValue(repository.searchUsers(it)) }
     }
 
-    fun onClickClear() {
+    private fun searchDelayed() {
+        if (query.isNullOrBlank()) return
+        mHandler.removeCallbacksAndMessages(null)
+        mHandler.postDelayed({ search() }, 1000)
+    }
+
+    fun clear() {
         query = ""
     }
 }

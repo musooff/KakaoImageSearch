@@ -103,7 +103,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:background="?attr/actionBarItemBackground"
-                    android:onClick="@{() -> viewModel.onClickClear()}"
+                    android:onClick="@{() -> viewModel.clear()}"
                     android:src="@drawable/ic_cancel_white_24dp"
                     android:visibility="@{viewModel.query.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"

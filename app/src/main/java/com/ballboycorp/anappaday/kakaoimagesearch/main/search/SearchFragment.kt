@@ -1,7 +1,6 @@
 package com.ballboycorp.anappaday.kakaoimagesearch.main.search
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,6 @@ class SearchFragment : BaseFragment() {
             return@OnEditorActionListener true
         })
 
-
     }
 
 
@@ -81,6 +79,7 @@ class SearchFragment : BaseFragment() {
                     viewModel.updateFound()
                 }
                 SearchState.LOADING -> {
+                    viewModel.isSearching = true
                 }
                 SearchState.LOADING_MORE -> {
                 }
