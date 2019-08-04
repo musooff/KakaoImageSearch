@@ -5,7 +5,8 @@ import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.ballboycorp.anappaday.kakaoimagesearch.model.Image
 import com.ballboycorp.anappaday.kakaoimagesearch.network.KakaoService
-import com.ballboycorp.anappaday.kakaoimagesearch.network.model.NetworkState
+import com.ballboycorp.anappaday.kakaoimagesearch.network.model.SearchState
+import com.ballboycorp.anappaday.kakaoimagesearch.utils.extensions.observeOnMainThread
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -32,7 +33,7 @@ class UserDataSource(
 ) :
     PageKeyedDataSource<Int, Image>() {
 
-    val networkState = MutableLiveData<NetworkState>()
+    val searchState = MutableLiveData<SearchState>()
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
@@ -41,17 +42,19 @@ class UserDataSource(
         compositeDisposable.add(
             KakaoService()
                 .images(query, 1, params.requestedLoadSize)
-                .map { it.documents }
+                .observeOnMainThread()
+                .doOnSubscribe { searchState.postValue(SearchState.LOADING) }
                 .subscribe({
                     callback.onResult(
-                        it,
+                        it.documents,
                         null,
-                        if (it.size == params.requestedLoadSize) 2 else null
+                        if (it.documents.size == params.requestedLoadSize) 2 else null
                     )
-                    networkState.value = NetworkState.SUCCESS
+                    searchState.value =
+                        if (it.meta?.isEng == true) SearchState.NOT_FOUND else SearchState.SUCCESS
                 }, {
                     callback.onResult(emptyList(), null, null)
-                    networkState.value = NetworkState.ERROR
+                    searchState.value = SearchState.ERROR
                 })
 
         )
@@ -64,18 +67,19 @@ class UserDataSource(
                 params.key,
                 params.requestedLoadSize
             )
-                .map { it.documents }
+                .observeOnMainThread()
+                .doOnSubscribe { searchState.postValue(SearchState.LOADING_MORE) }
                 .subscribe({ result ->
                     callback.onResult(
-                        result,
-                        params.key.plus(1).takeIf { result.size >= params.requestedLoadSize })
-                    networkState.value = NetworkState.SUCCESS
+                        result.documents,
+                        params.key.plus(1).takeIf { result.documents.size >= params.requestedLoadSize })
+                    searchState.value =
+                        if (result.meta?.isEng == true) SearchState.END_OF_RESULT else SearchState.SUCCESS
                 }, {
-                    networkState.value = NetworkState.ERROR
+                    searchState.value = SearchState.ERROR
                 })
         )
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Image>) {
-    }
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Image>) {}
 }

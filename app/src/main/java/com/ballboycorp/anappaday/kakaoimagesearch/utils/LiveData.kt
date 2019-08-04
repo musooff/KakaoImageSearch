@@ -1,0 +1,23 @@
+package com.ballboycorp.anappaday.kakaoimagesearch.utils
+
+/**
+ * Created by musooff on 2019-08-04.
+ */
+
+open class Event<out T>(private val content: T) {
+
+    var hasBeenHandled = false
+        private set
+
+
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+
+    fun peekContent(): T = content
+}
