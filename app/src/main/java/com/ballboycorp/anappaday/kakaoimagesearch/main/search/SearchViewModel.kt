@@ -54,6 +54,7 @@ class SearchViewModel : BaseObservableViewModel() {
     fun search() {
         if (query.isNullOrBlank()) return
         updateFound(false)
+        mHandler.removeCallbacksAndMessages(null)
         query
             ?.takeIf { it.isNotEmpty() }
             ?.let { result.postValue(repository.searchUsers(it)) }
