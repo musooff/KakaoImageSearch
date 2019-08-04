@@ -51,7 +51,7 @@ class UserDataSource(
                         if (it.documents.size == params.requestedLoadSize) 2 else null
                     )
                     searchState.value =
-                        if (it.meta?.isEng == true) SearchState.NOT_FOUND else SearchState.SUCCESS
+                        if (it.meta?.totalCount == 0) SearchState.NOT_FOUND else SearchState.SUCCESS
                 }, {
                     callback.onResult(emptyList(), null, null)
                     searchState.value = SearchState.ERROR

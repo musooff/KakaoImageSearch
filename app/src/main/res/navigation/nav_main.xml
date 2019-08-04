@@ -19,4 +19,9 @@
         android:name="com.ballboycorp.anappaday.kakaoimagesearch.main.search.dialog.ErrorDialog"
         android:label=" "
         tools:layout="@layout/dialog_error"/>
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.ballboycorp.anappaday.kakaoimagesearch.main.test.TestFragment"
+        android:label=" "
+        tools:layout="@layout/fragment_test"/>
 </navigation>

@@ -55,7 +55,7 @@ class SearchViewModel : BaseObservableViewModel() {
             ?.let { result.postValue(repository.searchUsers(it)) }
     }
 
-    fun onClickClear() {
+    fun clear() {
         query = ""
     }
 }

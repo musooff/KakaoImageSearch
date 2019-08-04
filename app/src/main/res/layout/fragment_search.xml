@@ -6,7 +6,9 @@
     <data>
 
         <import type="android.view.View" />
-
+        <variable
+            name="clickHandler"
+            type="com.ballboycorp.anappaday.kakaoimagesearch.main.search.SearchFragment.ClickHandler" />
         <variable
             name="viewModel"
             type="com.ballboycorp.anappaday.kakaoimagesearch.main.search.SearchViewModel" />
@@ -46,24 +48,13 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/searchViewContainer"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/ivSearch"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_search_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/motionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutDescription="@xml/search_view_animation"
+                tools:showPaths="true">
 
                 <EditText
                     android:id="@+id/searchEditText"
@@ -73,43 +64,26 @@
                     android:layout_marginRight="10dp"
                     android:background="@null"
                     android:hint="Search"
+                    android:text="@={viewModel.query}"
                     android:imeOptions="actionSearch"
                     android:inputType="textPersonName"
-                    android:text="@={viewModel.query}"
                     android:textColor="@color/colorBlack"
                     android:textColorHint="@color/colorGrey"
                     android:textCursorDrawable="@drawable/cursor_drawable"
                     android:textSize="20sp"
                     app:iconifiedByDefault="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/ivSearch"
-                    app:layout_constraintRight_toLeftOf="@id/btClear"
-                    app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="HardcodedText" />
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/loadingAnimation"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/btClear"
-                    app:layout_constraintEnd_toStartOf="@id/btClear"
-                    app:layout_constraintTop_toTopOf="@id/btClear"
-                    app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/loading_animation"
-                    app:shouldAnimate="@{viewModel.searching}" />
-
                 <ImageView
-                    android:id="@+id/btClear"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="?attr/actionBarItemBackground"
-                    android:onClick="@{() -> viewModel.onClickClear()}"
-                    android:src="@drawable/ic_cancel_white_24dp"
-                    android:visibility="@{viewModel.query.length() > 0 ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    android:id="@+id/searchButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:onClick="@{() -> clickHandler.onClickSearchButton()}"
+                    android:src="@drawable/ic_search_black_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.motion.widget.MotionLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

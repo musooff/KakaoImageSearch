@@ -1,7 +1,6 @@
 package com.ballboycorp.anappaday.kakaoimagesearch.main.search
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,10 @@ import com.ballboycorp.anappaday.kakaoimagesearch.network.model.SearchState
 import com.ballboycorp.anappaday.kakaoimagesearch.utils.extensions.getAppViewModel
 import com.ballboycorp.anappaday.kakaoimagesearch.utils.extensions.getViewModel
 import com.ballboycorp.anappaday.kakaoimagesearch.utils.extensions.hideKeyboard
+import com.ballboycorp.anappaday.kakaoimagesearch.utils.extensions.showKeyboard
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.motionLayout
+import kotlinx.android.synthetic.main.fragment_search.searchEditText
 
 /**
  * Created by musooff on 2019-08-03.
@@ -34,9 +36,10 @@ class SearchFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentSearchBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
-        return binding.root
+        return FragmentSearchBinding.inflate(inflater, container, false).apply {
+            viewModel = this@SearchFragment.viewModel
+            clickHandler = ClickHandler()
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,5 +111,19 @@ class SearchFragment : BaseFragment() {
         appViewModel.retrySearch.observe(this, Observer {
             viewModel.search()
         })
+    }
+
+
+    inner class ClickHandler {
+        fun onClickSearchButton() {
+            if (motionLayout.progress > 0.5f) {
+                viewModel.clear()
+                searchEditText.hideKeyboard()
+                motionLayout.transitionToStart()
+            } else {
+                searchEditText.showKeyboard()
+                motionLayout.transitionToEnd()
+            }
+        }
     }
 }

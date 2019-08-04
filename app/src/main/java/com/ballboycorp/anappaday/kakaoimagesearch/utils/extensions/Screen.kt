@@ -14,3 +14,11 @@ fun EditText.hideKeyboard() {
     val inputMethod = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethod.hideSoftInputFromWindow(windowToken, 0)
 }
+
+fun EditText.showKeyboard() {
+    postDelayed({
+        requestFocus()
+        val inputMethod = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethod.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }, 100)
+}

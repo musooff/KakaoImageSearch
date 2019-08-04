@@ -1,6 +1,8 @@
 package com.ballboycorp.anappaday.kakaoimagesearch.utils
 
+import android.view.View
 import android.widget.ImageView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
